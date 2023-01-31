@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Test_android_app.GameDataPage"
+             xmlns:viewmodel="clr-namespace:Test_android_app.ViewModel"
+             x:DataType="viewmodel:GameDataModel"
+             Title="GameDataPage">
+    <VerticalStackLayout Padding="20">
+        <!--V The label's Binding property is an observableproperty in the .cs file.  Thats how these two languages communicate-->
+        <Label 
+            Text="{Binding Titletext}"
+            FontSize="25"
+            VerticalOptions="Center" 
+            HorizontalOptions="Center" />
+        <!--/////////////////////////////////////-->
+        <Grid RowDefinitions="10, Auto, *" 
+          ColumnDefinitions=".75*, .25*"
+          Padding="10">
+
+            <Entry 
+               x:Name="HelmetAdder"
+               Placeholder="Add a helmet"
+               Text="{Binding Entrytext}"
+               Grid.Row="1"/>
+            <!--"{Binding Text}"-->
+            <!--The placeholdertext field above determines what is used for the base entry text in your list-->
+            <!--Binding the text label SHOULD make new entries match the name-->
+
+            <Button Text="Add"
+                Command="{Binding AddCommand}"
+                Grid.Row="1"
+                Grid.Column="1"/>
+
+            <!--ItemsSource is VERY important, it is the list of things your UI generates based on-->
+            <CollectionView Grid.Row="2" Grid.ColumnSpan="2"
+                        ItemsSource="{Binding Items}"
+                        SelectionMode="None">
+                <!-- Previously said Binding Items above-->
+                <!-- Commented out so I can figure out how to generate list from scratch-->
+
+                <!--<CollectionView.ItemsSource>
+                    <x:Array Type="{x:Type x:String}">
+                        <x:String>Helmet 1</x:String>
+                        <x:String>Helmet 2</x:String>
+                        <x:String>Helmet 3</x:String>
+                    </x:Array>
+                </CollectionView.ItemsSource>-->
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="{x:Type x:String}">
+                        <SwipeView>
+                            <SwipeView.RightItems>
+                                <SwipeItems>
+                                    <SwipeItem Text="Remove"
+                                           BackgroundColor="Red"
+                                           Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:GameDataModel}}, Path=DeleteCommand}"
+                                           CommandParameter="{Binding .}"/>
+                                </SwipeItems>
+                            </SwipeView.RightItems>
+                            <Grid Padding="0,5">
+                                <Frame>
+                                    <Frame.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:GameDataModel}}, Path=TapCommand}"
+                                           CommandParameter="{Binding .}"/>
+                                    </Frame.GestureRecognizers>
+                                    <Label Text="{Binding .}"
+                                   FontSize="24"/>
+                                    
+                                </Frame>
+                            </Grid>
+                        </SwipeView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Grid>
+        <!--/////////////////////////////////////-->
+        <Button Text="Go Back"
+                Command="{Binding GoBackCommand}"/>
+       
+    </VerticalStackLayout>
+
+</ContentPage>
